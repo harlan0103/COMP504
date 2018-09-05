@@ -10,6 +10,11 @@ public abstract class AShape {
     protected Point loc;
     protected String color;
 
+    // Constructor for AShape
+    public AShape(){
+        this.loc = new Point();
+    }
+
     /**
      * Get the shape name
      * @return shape name
