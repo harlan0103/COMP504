@@ -6,6 +6,7 @@ public class Triangle extends AShape {
     private String name;
     private int x2, y2, x3, y3;
 
+    // Constructor for Triangle
     public Triangle(int locX, int locY, int x2, int y2, int x3, int y3, String c){
         //super(locX, locY, c);
         this.x2 = x2;

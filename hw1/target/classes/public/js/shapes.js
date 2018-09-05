@@ -172,16 +172,6 @@ function combo(){
 }
 
 /**
-* Function for redirect
-*/
-function redirectBack(){
-    $.get("/canvas", function (data, status) {
-        // When type endpoint /canvas, remove all the shapes on the canvas
-        app.clear();
-    }, "json");
-}
-
-/**
  * Clear the canvas
  */
 function clear() {
