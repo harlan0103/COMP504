@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/ballworld.js"></script>
+</head>
+<body>
+<div style="position:fixed; top:3em; left:0em;">
+    <select id="strategySelector" multiple>
+        <option>StraightStrategy</option>
+        <option>RotationStrategy</option>
+        <option>SizeChangeStrategy</option>
+        <option>ColorChangeStrategy</option>
+        <option>SpeedChangeStrategy</option>
+        <option>FlickerStrategy</option>
+        <option>LoopStrategy</option>
+    </select>
+    <button id="btn-load">Make Normal Ball</button>
+    <button id="btn-switcherBall">Make Switcher Ball</button>
+    <button id="btn-switch">Switch</button>
+    <button id="btn-clear">Clear</button>
+    <canvas width="800" height="800" style="border: 1px solid #000000"></canvas>
+</div>
+
+
+</body>
+</html>
