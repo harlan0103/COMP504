@@ -1,0 +1,245 @@
+package edu.rice.comp504.model;
+
+
+import edu.rice.comp504.model.cmd.MoveShapeCmd;
+import edu.rice.comp504.model.cmd.SwitchCmd;
+import edu.rice.comp504.model.paintobj.ABall;
+import edu.rice.comp504.model.paintobj.APaintObject;
+import edu.rice.comp504.model.paintobj.ARectangle;
+import edu.rice.comp504.model.strategy.*;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Random;
+
+/**
+ * The dispatch adapter is periodically called upon to update the ShapeWorld
+ */
+public class DispatcherAdapter extends Observable {
+    private Point dims;
+
+    /**
+     * Constructor
+     */
+    public DispatcherAdapter() {
+
+    }
+
+    /**
+     * Set the canvas dimensions
+     * @param dims The canvas width (x) and height (y)
+     */
+    public void setCanvasDims(Point dims) {
+        // Set the new dimension point
+        this.dims = dims;
+    }
+
+    /**
+     * Get the canvas dimensions
+     * @return The canvas dimensions
+     */
+    public Point getCanvasDims() {
+        // Return the canvas dimension
+        return this.dims;
+    }
+
+
+    /**
+     * Call the update method on all the paintobj observers to update their position in the paintobj world
+     */
+    public void updateBallWorld() {
+        // If there has an observer
+        // Then notify that observer to set change
+        if(countObservers() != 0){
+            setChanged();
+            MoveShapeCmd moveCmd = new MoveShapeCmd();
+            notifyObservers(moveCmd);
+            //notifyObservers();
+        }
+    }
+
+
+    /**
+     * Load a paintobj into the shape world
+     * @param body  The REST request body has the strategy names.
+     * @param type  The object type (e.g. ball, star, pentagon)
+     * @return A paintobj
+     */
+    public APaintObject loadPaintObj(String body, String type, String switchType) {
+        //System.out.println(body);
+        IUpdateStrategy strategy = getStrategy(body);
+        System.out.println("Check for strategy");
+        System.out.println(strategy.getName());
+        //APaintObject shape;
+
+        if(type.equals("")){   // If there is no type selected
+            String[] nullShapes = {"Ball", "Rectangle"};    // Create an array contains all shapes
+            for(String s: nullShapes){
+                // For every shape name we create a random shape
+                createRandomShape(s, new NullStrategy(), switchType);
+            }
+        }else{  // Has selected options
+            String[] shapeArr = type.split("\\s+");
+            for(String s: shapeArr){
+                createRandomShape(s, strategy, switchType);
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * Switch the strategy for all the switcher balls
+     * @param body  The REST request body containing the new strategy.
+     */
+    public void switchStrategy(String body, String type) {
+
+        if(!body.equals("") && !type.equals("")){
+            ArrayList<String> typeList = new ArrayList<>();
+            setChanged();
+            IUpdateStrategy strategy = getStrategy(body);
+            System.out.println(type);
+            String[] typeArray = type.split("\\s+");
+            for(int i = 0; i < typeArray.length; i++){
+                typeList.add(typeArray[i]);
+            }
+
+            SwitchCmd switchCmd = new SwitchCmd(strategy, typeList);
+            notifyObservers(switchCmd);
+
+        }
+        else{
+            System.out.println("No type selected and no strategy selected");
+        }
+
+    }
+
+    /*
+    * Get the strategy from selectors
+    * */
+    public IUpdateStrategy getStrategy(String body){
+        // " StraightStrategy RotateStrategy ColorChangeStrategy"
+        String[] strategies = body.split("\\s+");
+        IUpdateStrategy[] sArray;
+
+        if(strategies.length == 0){ // No strategy selected
+            return new NullStrategy();
+        }
+        else if(strategies.length == 1){    // Single strategy
+            IUpdateStrategy s = getStrategyName(strategies[0]);
+            //System.out.println(strategies[0]);
+            return s;
+        }
+        else{   // More than one strategies has been selected
+            sArray = new IUpdateStrategy[strategies.length];
+            for(int i = 0; i < strategies.length; i++){
+                IUpdateStrategy s = getStrategyName(strategies[i]);
+                //System.out.println(sArray[i].getName());
+                sArray[i] = s;
+                //System.out.println("sArray[i] :" + sArray[i].getName());
+            }
+            return new CompositeStrategy(sArray);
+        }
+    }
+
+    /*
+    * @getStrategyName()
+    * Get strategy ame from array and return a new strategy
+    * */
+    public IUpdateStrategy getStrategyName(String strategyName){
+        switch (strategyName){
+            case "StraightStrategy":
+                return new StraightStrategy();
+            case "RotateStrategy":
+                return new RotateStrategy();
+            case "ColorChangeStrategy":
+                return new ColorChangeStrategy();
+            case "FlickerStrategy":
+                return new FlickerStrategy();
+            case "LoopStrategy":
+                return new LoopStrategy();
+            case "SizeChangeStrategy":
+                return new SizeChangeStrategy();
+            case "SpeedChangeStrategy":
+                return new SpeedChangeStrategy();
+            default:
+                return new NullStrategy();
+        }
+    }
+
+    public void clear(){
+        deleteObservers();
+    }
+
+    /*
+    * @createRandomShape
+    * Create shape based on the selected option
+    * Pass-in type, color and strategy
+    * */
+    public APaintObject createRandomShape(String type, IUpdateStrategy strategy, String switchType){
+        APaintObject newShape;
+
+        Point dims = getCanvasDims();
+
+        int dimWidth = dims.x;
+        int dimHeight = dims.y;
+
+        // Create Random size, velocity
+        Random random = new Random();
+
+        // Create a random velocity Point
+        int velX = random.nextInt(50) + 20;
+        int velY = random.nextInt(50) + 20;
+
+        Point vel = new Point(velX, velY);
+
+        // If type is "Ball"
+        if(type.equals("Ball")){
+            int radius = random.nextInt(50) + 10;
+
+            // The left boundary of a ball loc is 0 + radius
+            // The right boundary of a ball loc is is width - radius
+            // Same as the top boundary and bottom boundary
+            int locX = random.nextInt(dimWidth - 2 * radius) + radius;
+            int locY = random.nextInt(dimHeight - 2 * radius) + radius;
+
+            Point loc = new Point(locX, locY);
+            // Draw a new ball and add to observer
+            if(switchType.equals("true")){
+                System.out.println("drawed a switch ball");
+                IUpdateStrategy switcherStrategy = new SwitcherStrategy(strategy);
+                newShape = new ABall(loc, vel, "#97FF7E", type, switcherStrategy, dims, radius, switchType);
+            }
+            else{
+                newShape = new ABall(loc, vel, "#97FF7E", type, strategy, dims, radius, switchType);
+            }
+
+            addObserver(newShape);
+            return newShape;
+        }
+        // If type is "Rectangle"
+        else if(type.equals("Rectangle")){
+            int side = random.nextInt(50) + 20;
+
+            int locX = random.nextInt(dimWidth - side);
+            int locY = random.nextInt(dimHeight - side);
+
+            Point loc = new Point(locX, locY);
+
+            if(switchType.equals("true")){
+                IUpdateStrategy switcherStrategy = new SwitcherStrategy(strategy);
+                newShape = new ARectangle(loc, vel, "#FF8383", type, switcherStrategy, dims, side, switchType);
+            }
+            else{
+                newShape = new ARectangle(loc, vel, "#FF8383", type, strategy, dims, side, switchType);
+            }
+
+            addObserver(newShape);
+            return newShape;
+        }
+        else{
+            return null;
+        }
+    }
+}

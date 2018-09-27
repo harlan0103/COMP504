@@ -1,0 +1,29 @@
+package edu.rice.comp504.model.paintobj;
+
+import edu.rice.comp504.model.strategy.IUpdateStrategy;
+
+import java.awt.*;
+import java.util.Random;
+
+public class ARectangle extends APaintObject {
+    /*Add new attributes to the concrete shape "BALL"*/
+
+    public ARectangle(Point loc, Point vel, String color, String type, IUpdateStrategy strategy, Point dims, int size, String switcherBall){
+        super(loc, vel, color, type, strategy, dims, size, switcherBall);
+    }
+
+    @Override
+    public void rotate(double angle){
+
+    }
+
+    @Override
+    public void collision(Point dims){
+        collide = checkForCollide(this.size);
+    }
+
+    public boolean isCollide(){
+        return this.collide;
+    }
+}
+

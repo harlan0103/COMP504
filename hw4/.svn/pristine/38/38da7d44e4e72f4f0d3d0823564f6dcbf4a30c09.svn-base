@@ -1,0 +1,70 @@
+'use strict'
+
+//app to draw polymorphic shapes on canvas
+var app;
+
+function createApp(canvas) {
+    var c = canvas.getContext("2d");
+
+    var drawBall = function(x, y, radius, color) {
+
+    }
+
+    var clear = function() {
+
+    }
+
+
+    return {
+        drawBall: drawBall,
+        clear: clear,
+    }
+}
+
+
+window.onload = function() {
+    app = createApp(document.querySelector("canvas"));
+
+    $("#btn-switch").click(switchStrategy);
+    $("#btn-clear").click(clear);
+}
+
+/**
+ * load a paintobj at a location on the canvas
+ */
+function loadPaintObj() {
+
+    $.post("/load", { }, function (data, status) {
+
+    }, "json");
+}
+
+/**
+ * Switch strategy for all switcher objects of right type
+ */
+function switchStrategy() {
+    $.post("/switch", { }, function (data, status) {
+
+    }, "json");
+}
+
+function updateBallWorld() {
+    $.get("/update", function(data, status) {
+
+    }, "json");
+}
+
+
+/**
+ * Pass along the canvas dimensions
+ */
+function canvasDims() {
+    $.get("/canvas", { });
+}
+
+/**
+ * Clear the canvas
+ */
+function clear() {
+    $.get("/clear");
+}

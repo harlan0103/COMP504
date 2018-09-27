@@ -1,0 +1,40 @@
+package edu.rice.comp504.model.strategy;
+
+import edu.rice.comp504.model.paintobj.APaintObject;
+
+public class SwitcherStrategy implements IUpdateStrategy {
+    private IUpdateStrategy strategy;
+
+    /*
+    * Need to pass in a strategy object
+    * */
+    public SwitcherStrategy(IUpdateStrategy strategy){
+        this.strategy = strategy;
+    }
+
+    @Override
+    public String getName(){
+        return "SwitcherStrategy";
+    }
+
+    /*
+    * Return the current strategy
+    * */
+    public IUpdateStrategy getStrategy(){
+        return this.strategy;
+    }
+
+    /*
+    * Set a new strategy to SwitcherStrategy
+    * */
+    public void setStrategy(IUpdateStrategy strategy){
+        this.strategy = strategy;
+    }
+
+    @Override
+    public void updateState(APaintObject context){
+        // The strategy in the SwitcherStrategy
+        // Will call its own updateState method
+        strategy.updateState(context);
+    }
+}
