@@ -1,0 +1,39 @@
+package edu.rice.comp504.controller;
+
+import com.google.gson.Gson;
+import edu.rice.comp504.model.DispatcherAdapter;
+
+
+import static spark.Spark.*;
+
+
+public class ShapeWorldController {
+
+    public static void main(String[] args) {
+        staticFiles.location("/public");
+
+        Gson gson = new Gson();
+        DispatcherAdapter dis = new DispatcherAdapter();
+
+        post("/load", (request, response) -> {
+           return null;
+        });
+
+        post("/switch", (request, response) -> {
+           return null;
+        });
+
+        get("/update", (request, response) -> {
+           return null;
+        });
+
+        get("/canvas", (request, response) -> {
+           return null;
+        });
+
+        get("/clear", (request, response) -> {
+           return null;
+        });
+
+    }
+}

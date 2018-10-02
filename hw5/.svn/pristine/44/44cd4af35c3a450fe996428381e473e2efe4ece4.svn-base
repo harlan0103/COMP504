@@ -1,0 +1,65 @@
+package edu.rice.comp504.model;
+
+
+import edu.rice.comp504.model.paintobj.APaintObject;
+
+import java.awt.*;
+import java.util.Observable;
+
+/**
+ * The dispatch adapter is periodically called upon to update the ShapeWorld
+ */
+public class DispatcherAdapter extends Observable {
+    private Point dims;
+
+    /**
+     * Constructor
+     */
+    public DispatcherAdapter() {
+
+    }
+
+    /**
+     * Set the canvas dimensions
+     * @param dims The canvas width (x) and height (y)
+     */
+    public void setCanvasDims(Point dims) {
+
+    }
+
+    /**
+     * Get the canvas dimensions
+     * @return The canvas dimensions
+     */
+    public Point getCanvasDims() {
+        return null;
+    }
+
+
+    /**
+     * Call the update method on all the paintobj observers to update their position in the paintobj world
+     */
+    public void updateBallWorld() {
+
+    }
+
+
+    /**
+     * Load a paintobj into the shape world
+     * @param body  The REST request body has the strategy names.
+     * @param type  The object type (e.g. ball, star, pentagon)
+     * @return A paintobj
+     */
+    public APaintObject loadPaintObj(String body, String type) {
+        return null;
+    }
+
+
+    /**
+     * Switch the strategy for all the switcher balls
+     * @param body  The REST request body containing the new strategy.
+     */
+    public void switchStrategy(String body) {
+    }
+
+}
