@@ -3,9 +3,7 @@ package edu.rice.comp504.model;
 
 import edu.rice.comp504.model.cmd.MoveShapeCmd;
 import edu.rice.comp504.model.cmd.SwitchCmd;
-import edu.rice.comp504.model.paintobj.ABall;
-import edu.rice.comp504.model.paintobj.APaintObject;
-import edu.rice.comp504.model.paintobj.ARectangle;
+import edu.rice.comp504.model.paintobj.*;
 import edu.rice.comp504.model.strategy.*;
 
 import java.awt.*;
@@ -72,10 +70,11 @@ public class DispatcherAdapter extends Observable {
 
         // If there is no type selected
         if(type.equals("")){
-            String[] nullShape = {"Ball", "Rectangle"};
+            // Adding new shapes to the nullShape array
+            String[] nullShape = {"Ball", "Rectangle", "Fish"};
             strategy = new NullStrategy();
             for(String s: nullShape){
-                // We create an object for all shapes with Nullstrategy
+                // We create an object for all shapes with null Strategy
                 newShape = createRandomShape(s, strategy);
             }
         }else{  // Has selected options
@@ -112,6 +111,46 @@ public class DispatcherAdapter extends Observable {
         // If type is "Rectangle"
         else if(type.equals("Rectangle")){
             newShape = ARectangle.makeARectangle(strategy, dims);
+            addObserver(newShape);
+            return newShape;
+        }
+        // If type is "Fish"
+        else if(type.equals("Fish")){
+            // now we create a new fish object
+            newShape = AFish.makeAFish(strategy, dims);
+            addObserver(newShape);
+            return newShape;
+        }
+        // If type is "Diamond"
+        else if(type.equals("Diamond")){
+            // now we create a new fish object
+            newShape = ADiamond.makeDiamond(strategy, dims);
+            addObserver(newShape);
+            return newShape;
+        }
+        // If type is "Triangle"
+        else if(type.equals("Triangle")){
+            // now we create a new fish object
+            newShape = ATriangle.makeTriangle(strategy, dims);
+            addObserver(newShape);
+            return newShape;
+        }
+        // If type is "Hexagon"
+        else if(type.equals("Hexagon")){
+            // now we create a new fish object
+            newShape = AHexagon.makeHexagon(strategy, dims);
+            addObserver(newShape);
+            return newShape;
+        }
+        else if(type.equals("Octagon")){
+            // now we create a new fish object
+            newShape = AOctagon.makeOctagon(strategy, dims);
+            addObserver(newShape);
+            return newShape;
+        }
+        else if(type.equals("Pentagon")){
+            // now we create a new fish object
+            newShape = APentagon.makePentagon(strategy, dims);
             addObserver(newShape);
             return newShape;
         }

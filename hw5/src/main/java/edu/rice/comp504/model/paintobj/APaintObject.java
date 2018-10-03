@@ -109,11 +109,7 @@ public abstract class APaintObject implements Observer {
      * @param velX
      * @param velY
      */
-    public void nextLocation(int velX, int velY) {
-        // Add velocity vectors to the current Location
-        this.loc.x += velX;
-        this.loc.y += velY;
-    }
+    public abstract void nextLocation(int velX, int velY);
 
     /**
      * Get the velocity of the paint.

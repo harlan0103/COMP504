@@ -84,5 +84,15 @@ public class ABall extends APaintObject {
         return this.radius;
     }
 
+    /*
+    * @nextLocation is override the method in APaintObject
+    * change the location of the object to the next point
+    * */
+    @Override
+    public void nextLocation(int velX, int velY) {
+        // Add velocity vectors to the current Location
+        this.loc.x += velX;
+        this.loc.y += velY;
+    }
 }
 

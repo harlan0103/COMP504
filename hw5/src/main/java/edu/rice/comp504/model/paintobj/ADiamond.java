@@ -5,22 +5,22 @@ import edu.rice.comp504.model.strategy.IUpdateStrategy;
 import java.awt.*;
 import java.util.Random;
 
-public class ARectangle extends APaintObject {
-    /*Add new attributes to the concrete shape "BALL"*/
-    private int side;
+public class ADiamond extends APaintObject {
+    //Add new attributes to the concrete shape "Diamond"
+    private int radius;
 
     /**
-     * Constructor of ARectangle
+     * Constructor of ADiamond
      * */
-    private ARectangle(Point loc, Point vel, String color, IUpdateStrategy strategy, int side){
-        super(loc, vel, color, "Rectangle", strategy);
-        this.side = side;
+    private ADiamond(Point loc, Point vel, String color, IUpdateStrategy strategy, int radius){
+        super(loc, vel, color, "Diamond", strategy);
+        this.radius = radius;
     }
 
     /**
-     * makeARectangle function will randomize the radius, location and speed for a ball object
+     * makeABall function will randomize the radius, location and speed for a ball object
      * */
-    public static ARectangle makeARectangle(IUpdateStrategy strategy, Point dims){
+    public static ADiamond makeDiamond(IUpdateStrategy strategy, Point dims){
         // Get the dimension of canvas
         int dimWidth = dims.x;
         int dimHeight = dims.y;
@@ -30,16 +30,17 @@ public class ARectangle extends APaintObject {
         int velX = random.nextInt(50) + 20;
         int velY = random.nextInt(50) + 20;
         Point vel = new Point(velX, velY);
-        // Randomize a new side length
-        int side = random.nextInt(50) + 10;
-        // The left boundary of a rectangle is the left top point
-        // Therefore only need to minus one side to make sure not exceed right wall
-        int locX = random.nextInt(dimWidth - side);
-        int locY = random.nextInt(dimHeight - side);
+        // Randomize a new radius to generate a diamond
+        int radius = random.nextInt(50) + 10;
+        // Set the midpoint of the diamond shape
+        int locX = random.nextInt(dimWidth - 2 * radius) + radius;
+        int locY = random.nextInt(dimHeight - 2 * radius) + radius;
+
         Point loc = new Point(locX, locY);
         // Return a new object
-        return new ARectangle(loc, vel, "#FF8383", strategy, side);
+        return new ADiamond(loc, vel, "#5677FF", strategy, radius);
     }
+
 
     @Override
     public void rotate(double angle){
@@ -49,51 +50,37 @@ public class ARectangle extends APaintObject {
         this.vel.y = (int)Math.round(velY * Math.cos(angle) + velX * Math.sin(angle));
     }
 
-    /*
-    * @collision
-    * Check for the collision status
-    * */
     @Override
     public void collision(Point dims){
         this.setCollide(false);
+        // Return the boolean value
         int locX = this.getLocation().x;
         int locY = this.getLocation().y;
-        Point vel = this.getVelocity();
-
-        if(locX + this.side > dims.x){
-            this.setLocation(new Point(dims.x - this.side, locY));
+        if(this.getLocation().x + this.radius >= dims.x || locX - this.radius <= 0){
+            Point vel = this.getVelocity();
             this.setVelocity(new Point(-vel.x, vel.y));
-            this.setCollide(true);
-        }else if(locX < 0){
-            this.setLocation(new Point(0, locY));
-            this.setVelocity(new Point(-vel.x, vel.y));
+            // When collide occurs set the collide status to true
             this.setCollide(true);
         }
-
-        if(locY + this.side > dims.y){
-            this.setLocation(new Point(locX, dims.y - this.side));
-            this.setVelocity(new Point(vel.x, -vel.y));
-            this.setCollide(true);
-        }
-        else if(locY < 0){
-            this.setLocation(new Point(locX, 0));
+        if(locY + this.radius >= dims.y || locY <= 0){
+            Point vel = this.getVelocity();
             this.setVelocity(new Point(vel.x, -vel.y));
             this.setCollide(true);
         }
     }
 
     /*
-    * @setSize
-    * Set a new side length for the ARectangle
-    * */
+     * @setSize
+     * Set a new radius for the ABall
+     * */
     @Override
     public void setSize(int newSize){
-        this.side = newSize;
+        this.radius = newSize;
     }
 
     @Override
     public int getSize(){
-        return this.side;
+        return this.radius;
     }
 
     /*

@@ -5,22 +5,22 @@ import edu.rice.comp504.model.strategy.IUpdateStrategy;
 import java.awt.*;
 import java.util.Random;
 
-public class ARectangle extends APaintObject {
+public class AOctagon extends APaintObject {
     /*Add new attributes to the concrete shape "BALL"*/
     private int side;
 
     /**
      * Constructor of ARectangle
      * */
-    private ARectangle(Point loc, Point vel, String color, IUpdateStrategy strategy, int side){
-        super(loc, vel, color, "Rectangle", strategy);
+    private AOctagon(Point loc, Point vel, String color, IUpdateStrategy strategy, int side){
+        super(loc, vel, color, "Octagon", strategy);
         this.side = side;
     }
 
     /**
      * makeARectangle function will randomize the radius, location and speed for a ball object
      * */
-    public static ARectangle makeARectangle(IUpdateStrategy strategy, Point dims){
+    public static AOctagon makeOctagon(IUpdateStrategy strategy, Point dims){
         // Get the dimension of canvas
         int dimWidth = dims.x;
         int dimHeight = dims.y;
@@ -31,14 +31,14 @@ public class ARectangle extends APaintObject {
         int velY = random.nextInt(50) + 20;
         Point vel = new Point(velX, velY);
         // Randomize a new side length
-        int side = random.nextInt(50) + 10;
+        int side = random.nextInt(50) + 30;
         // The left boundary of a rectangle is the left top point
         // Therefore only need to minus one side to make sure not exceed right wall
         int locX = random.nextInt(dimWidth - side);
         int locY = random.nextInt(dimHeight - side);
         Point loc = new Point(locX, locY);
         // Return a new object
-        return new ARectangle(loc, vel, "#FF8383", strategy, side);
+        return new AOctagon(loc, vel, "#888989", strategy, side);
     }
 
     @Override
@@ -50,9 +50,9 @@ public class ARectangle extends APaintObject {
     }
 
     /*
-    * @collision
-    * Check for the collision status
-    * */
+     * @collision
+     * Check for the collision status
+     * */
     @Override
     public void collision(Point dims){
         this.setCollide(false);
@@ -60,22 +60,22 @@ public class ARectangle extends APaintObject {
         int locY = this.getLocation().y;
         Point vel = this.getVelocity();
 
-        if(locX + this.side > dims.x){
+        if(this.getLocation().x + this.side > dims.x){
             this.setLocation(new Point(dims.x - this.side, locY));
             this.setVelocity(new Point(-vel.x, vel.y));
             this.setCollide(true);
-        }else if(locX < 0){
+        }else if(this.getLocation().x < 0){
             this.setLocation(new Point(0, locY));
             this.setVelocity(new Point(-vel.x, vel.y));
             this.setCollide(true);
         }
 
-        if(locY + this.side > dims.y){
+        if(this.getLocation().y + this.side > dims.y){
             this.setLocation(new Point(locX, dims.y - this.side));
             this.setVelocity(new Point(vel.x, -vel.y));
             this.setCollide(true);
         }
-        else if(locY < 0){
+        else if(this.getLocation().y < 0){
             this.setLocation(new Point(locX, 0));
             this.setVelocity(new Point(vel.x, -vel.y));
             this.setCollide(true);
@@ -83,9 +83,9 @@ public class ARectangle extends APaintObject {
     }
 
     /*
-    * @setSize
-    * Set a new side length for the ARectangle
-    * */
+     * @setSize
+     * Set a new side length for the ARectangle
+     * */
     @Override
     public void setSize(int newSize){
         this.side = newSize;
@@ -107,4 +107,3 @@ public class ARectangle extends APaintObject {
         this.loc.y += velY;
     }
 }
-

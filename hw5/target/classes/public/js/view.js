@@ -15,8 +15,91 @@ function createApp(canvas) {
             if(data.obs[i].type == "Ball"){
                 app.drawBall(data.obs[i].loc.x, data.obs[i].loc.y, data.obs[i].radius, data.obs[i].color);
             }
-            else{
+            else if(data.obs[i].type == "Rectangle"){
                 app.drawRectangle(data.obs[i].loc.x, data.obs[i].loc.y, data.obs[i].side, data.obs[i].color);
+            }
+            else if(data.obs[i].type == "Fish"){
+                // Draw fish img based on the flip status
+                app.drawFish(data.obs[i].loc.x, data.obs[i].loc.y, data.obs[i].imgWidth, data.obs[i].imgHeight, data.obs[i].flip);
+            }
+            else if(data.obs[i].type == "Diamond"){
+                // Draw a diamond shape
+                var locX = data.obs[i].loc.x;
+                var locY = data.obs[i].loc.y;
+                var radius = data.obs[i].radius;
+                c.beginPath();
+                c.moveTo(locX, locY - radius);
+                c.lineTo(locX - radius, locY);
+                c.lineTo(locX, locY + radius);
+                c.lineTo(locX + radius, locY);
+                c.closePath();
+                c.fillStyle = data.obs[i].color;
+                c.fill();
+            }
+            else if(data.obs[i].type == "Triangle"){
+                // Draw a triangle shape
+                var locX = data.obs[i].loc.x;
+                var locY = data.obs[i].loc.y;
+                var side = data.obs[i].side;
+                c.beginPath();
+                c.moveTo(locX + side / 2, locY);
+                c.lineTo(locX, locY + side);
+                c.lineTo(locX + side, locY + side);
+                c.closePath();
+                c.fillStyle = data.obs[i].color;
+                c.fill();
+            }
+            else if(data.obs[i].type == "Pentagon"){
+                // Draw a hexagon shape
+                var locX = data.obs[i].loc.x;
+                var locY = data.obs[i].loc.y;
+                var side = data.obs[i].side;
+                c.beginPath();
+                c.moveTo(locX + side / 2, locY);
+                c.lineTo(locX, locY + side / 3);
+                c.lineTo(locX + side / 5, locY + side);
+                c.lineTo(locX + side / 5 * 4, locY + side);
+                c.lineTo(locX + side, locY + side / 3);
+                c.closePath();
+                c.fillStyle = data.obs[i].color;
+                c.fill();
+            }
+            else if(data.obs[i].type == "Hexagon"){
+                // Draw a hexagon shape
+                var locX = data.obs[i].loc.x;
+                var locY = data.obs[i].loc.y;
+                var side = data.obs[i].side;
+                c.beginPath();
+                c.moveTo(locX + side / 2, locY);
+                c.lineTo(locX, locY + side / 4);
+                c.lineTo(locX, locY + side / 4 * 3);
+                c.lineTo(locX + side / 2, locY + side);
+                c.lineTo(locX + side, locY + side / 4 * 3);
+                c.lineTo(locX + side, locY + side / 4);
+                c.closePath();
+                c.fillStyle = data.obs[i].color;
+                c.fill();
+            }
+            else if(data.obs[i].type == "Octagon"){
+                // Draw a octagon shape
+                var locX = data.obs[i].loc.x;
+                var locY = data.obs[i].loc.y;
+                var side = data.obs[i].side;
+                c.beginPath();
+                c.moveTo(locX + side / 4, locY);
+                c.lineTo(locX, locY + side / 4);
+                c.lineTo(locX, locY + side / 4 * 3);
+                c.lineTo(locX + side / 4, locY + side);
+                c.lineTo(locX + side / 4 * 3, locY + side);
+                c.lineTo(locX + side, locY + side / 4 * 3);
+                c.lineTo(locX + side, locY + side / 4);
+                c.lineTo(locX + side / 4 * 3, locY);
+                c.closePath();
+                c.fillStyle = data.obs[i].color;
+                c.fill();
+            }
+            else{
+
             }
         }
     }
@@ -44,6 +127,21 @@ function createApp(canvas) {
     }
 
     /*
+    * To draw a fish img based on the params
+    * */
+    var drawFish = function(locX, locY, imgWidth, imgHeight, flip){
+        var img = new Image();
+        if(flip == true){
+            img.src = "./fish_flip.png";
+            c.drawImage(img, locX, locY, imgWidth, imgHeight);
+        }
+        else{
+            img.src = "./fish.png";
+            c.drawImage(img, locX, locY, imgWidth, imgHeight);
+        }
+    }
+
+    /*
     * Update shape status
     * */
     var updateShapeWorld = function(data){
@@ -63,6 +161,7 @@ function createApp(canvas) {
         drawBall: drawBall,
         drawRectangle: drawRectangle,
         drawShape: drawShape,
+        drawFish: drawFish,
         updateShapeWorld: updateShapeWorld,
         clear: clear,
     }
@@ -95,7 +194,6 @@ function loadPaintObj() {
         "strategy": strategy,
         "switch": "false"
     }, function (data, status) {
-        console.log(data);
         app.drawShape(data);
     }, "json");
 }

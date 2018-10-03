@@ -43,7 +43,7 @@ public class FlickerStrategy implements IUpdateStrategy {
             context.setColor("#000000");
         }
         else{
-            context.setColor("#00FFBF");
+            context.setColor("#B8B8B8");
         }
         Point vel = context.getVelocity();
         context.nextLocation(vel.x, vel.y);
