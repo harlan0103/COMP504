@@ -69,28 +69,60 @@ public class DispatcherAdapter extends Observable {
         IUpdateStrategy strategy = getStrategy(body);
 
         // If there is no type selected
-        if(type.equals("")){
+        if(type.equals("") || type.equals("unknown") || body.equals("")){
             // Adding new shapes to the nullShape array
-            String[] nullShape = {"Ball", "Rectangle", "Fish"};
+            String[] nullShape = {"Ball", "Rectangle", "Fish", "Triangle", "Rectangle", "Diamond", "Pentagon", "Hexagon", "Octagon"};
             strategy = new NullStrategy();
+            // Create a APaintObject array
+            APaintObject[] children = new APaintObject[9];
+            int index = 0;
             for(String s: nullShape){
                 // We create an object for all shapes with null Strategy
                 newShape = createRandomShape(s, strategy);
+                //newShape.setType("CompositeObject");
+                children[index] = newShape;
+                index++;
             }
+            // Create the Composite shape
+            APaintObject composite = new CompositeObject(strategy, children);
+            addObserver(composite);
+            return composite;
         }else{  // Has selected options
             String[] shapeArr = type.split("\\s+");
-            for(String s: shapeArr){
-                // If it is the switcher shape
+            // If only selected one shape
+            if(shapeArr.length == 1){
                 if(switchType.equals("true")){
                     IUpdateStrategy switcherStrategy = new SwitcherStrategy(strategy);
-                    newShape = createRandomShape(s, switcherStrategy);
+                    newShape = createRandomShape(shapeArr[0], switcherStrategy);
                 }
                 else{
-                    newShape = createRandomShape(s, strategy);
+                    newShape = createRandomShape(shapeArr[0], strategy);
                 }
+                addObserver(newShape);
+                return newShape;
+            }
+            else{
+                // selected object more than one, create composite object
+                APaintObject[] compositeArr = new APaintObject[shapeArr.length];
+                // Check for the strategy, then create shape
+                if(switchType.equals("true")){
+                    IUpdateStrategy switcher = new SwitcherStrategy(strategy);
+                    // Update strategy to switcher strategy
+                    strategy = switcher;
+                }
+                // Create an index for compositeArr
+                int index = 0;
+                for(String s: shapeArr){
+                    newShape = createRandomShape(s, strategy);
+                    compositeArr[index] = newShape;
+                    index++;
+                }
+
+                APaintObject composite = new CompositeObject(strategy, compositeArr);
+                addObserver(composite);
+                return composite;
             }
         }
-        return newShape;
     }
 
     /*
@@ -105,53 +137,53 @@ public class DispatcherAdapter extends Observable {
         // If type is "Ball"
         if(type.equals("Ball")){
             newShape = ABall.makeABall(strategy, dims);
-            addObserver(newShape);
+            //addObserver(newShape);
             return newShape;
         }
         // If type is "Rectangle"
         else if(type.equals("Rectangle")){
             newShape = ARectangle.makeARectangle(strategy, dims);
-            addObserver(newShape);
+            //addObserver(newShape);
             return newShape;
         }
         // If type is "Fish"
         else if(type.equals("Fish")){
             // now we create a new fish object
             newShape = AFish.makeAFish(strategy, dims);
-            addObserver(newShape);
+            //addObserver(newShape);
             return newShape;
         }
         // If type is "Diamond"
         else if(type.equals("Diamond")){
             // now we create a new fish object
             newShape = ADiamond.makeDiamond(strategy, dims);
-            addObserver(newShape);
+            //addObserver(newShape);
             return newShape;
         }
         // If type is "Triangle"
         else if(type.equals("Triangle")){
             // now we create a new fish object
             newShape = ATriangle.makeTriangle(strategy, dims);
-            addObserver(newShape);
+            //addObserver(newShape);
             return newShape;
         }
         // If type is "Hexagon"
         else if(type.equals("Hexagon")){
             // now we create a new fish object
             newShape = AHexagon.makeHexagon(strategy, dims);
-            addObserver(newShape);
+            //addObserver(newShape);
             return newShape;
         }
         else if(type.equals("Octagon")){
             // now we create a new fish object
             newShape = AOctagon.makeOctagon(strategy, dims);
-            addObserver(newShape);
+            //addObserver(newShape);
             return newShape;
         }
         else if(type.equals("Pentagon")){
             // now we create a new fish object
             newShape = APentagon.makePentagon(strategy, dims);
-            addObserver(newShape);
+            //addObserver(newShape);
             return newShape;
         }
         else{
@@ -172,7 +204,6 @@ public class DispatcherAdapter extends Observable {
             IUpdateStrategy strategy = getStrategy(body);
             setChanged();
 
-
             String[] typeArray = type.split("\\s+");
             for(int i = 0; i < typeArray.length; i++){
                 typeList.add(typeArray[i]);
@@ -181,7 +212,6 @@ public class DispatcherAdapter extends Observable {
             notifyObservers(switchCmd);
         }
         else{
-            System.out.println("No type selected and no strategy selected");
         }
     }
 
@@ -222,17 +252,17 @@ public class DispatcherAdapter extends Observable {
             case "StraightStrategy":
                 return StraightStrategy.makeStrategy();
             case "RotateStrategy":
-                return new RotateStrategy();
+                return RotateStrategy.makeStrategy();
             case "ColorChangeStrategy":
-                return new ColorChangeStrategy();
+                return ColorChangeStrategy.makeStrategy();
             case "FlickerStrategy":
-                return new FlickerStrategy();
+                return FlickerStrategy.makeStrategy();
             case "LoopStrategy":
-                return new LoopStrategy();
+                return LoopStrategy.makeStrategy();
             case "SizeChangeStrategy":
-                return new SizeChangeStrategy();
+                return SizeChangeStrategy.makeStrategy();
             case "SpeedChangeStrategy":
-                return new SpeedChangeStrategy();
+                return SpeedChangeStrategy.makeStrategy();
             default:
                 return new NullStrategy();
         }

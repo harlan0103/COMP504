@@ -1,6 +1,7 @@
 package edu.rice.comp504.model.strategy;
 
 import edu.rice.comp504.model.paintobj.APaintObject;
+import edu.rice.comp504.model.paintobj.CompositeObject;
 
 import java.awt.*;
 
@@ -52,6 +53,18 @@ public class StraightStrategy implements IUpdateStrategy {
         Point vel = context.getVelocity();
         // Since it is straight strategy, the ball will only move horizontally
         vel.y = 0;
-        context.nextLocation(vel.x, vel.y);
+        // We need to check if the context is a composite object
+        if(context.getType().equals("CompositeObject")){
+            // This is a composite object
+            APaintObject[] arr = ((CompositeObject) context).getChildren();
+            for(APaintObject child : arr){
+                // Override the invalid composite velocity
+                vel.x = child.getVelocity().x;
+                child.nextLocation(vel.x, vel.y);
+            }
+        }
+        else{
+            context.nextLocation(vel.x, vel.y);
+        }
     }
 }

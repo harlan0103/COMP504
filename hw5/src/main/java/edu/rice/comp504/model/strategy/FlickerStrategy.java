@@ -1,16 +1,25 @@
 package edu.rice.comp504.model.strategy;
 
 import edu.rice.comp504.model.paintobj.APaintObject;
+import edu.rice.comp504.model.paintobj.CompositeObject;
 
 import java.awt.*;
 
 public class FlickerStrategy implements IUpdateStrategy {
-    private static StraightStrategy INSTANCE;
+    private static IUpdateStrategy singleton;
     /**
      * Constructor
      */
     public FlickerStrategy() {
 
+    }
+
+    // Create a singleton
+    public static IUpdateStrategy makeStrategy(){
+        if(singleton == null){
+            singleton = new FlickerStrategy();
+        }
+        return singleton;
     }
 
     /**
@@ -38,14 +47,31 @@ public class FlickerStrategy implements IUpdateStrategy {
         // While ball is moving
         // Change color to black and then change back
         //System.out.println("FLICKER");
-        String color = context.getColor();
-        if(!color.equals("#000000")){
-            context.setColor("#000000");
+        Point vel = context.getVelocity();
+        // Check if it is a composite object
+        if(context.getType().equals("CompositeObject")){
+            // This is a composite object
+            APaintObject[] arr = ((CompositeObject) context).getChildren();
+            for(APaintObject child : arr){
+                // Override the invalid composite velocity
+                vel = child.getVelocity();
+                makeFlicker(child);
+                child.nextLocation(vel.x, vel.y);
+            }
         }
         else{
+            makeFlicker(context);
+            context.nextLocation(vel.x, vel.y);
+        }
+    }
+
+    public void makeFlicker(APaintObject context){
+        String color = context.getColor();
+        if(color.equals("#000000")){
             context.setColor("#B8B8B8");
         }
-        Point vel = context.getVelocity();
-        context.nextLocation(vel.x, vel.y);
+        else{
+            context.setColor("#000000");
+        }
     }
 }

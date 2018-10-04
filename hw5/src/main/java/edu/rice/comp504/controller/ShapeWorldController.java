@@ -62,6 +62,5 @@ public class ShapeWorldController {
            dis.clear();
            return gson.toJson(dis);
         });
-
     }
 }

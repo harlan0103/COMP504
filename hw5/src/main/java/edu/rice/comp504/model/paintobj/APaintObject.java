@@ -62,6 +62,10 @@ public abstract class APaintObject implements Observer {
         return this.type;
     }
 
+    public void setType(String type){
+        this.type = type;
+    }
+
     /**
      * Get the paint location in the paint world.
      * @return The paint location.

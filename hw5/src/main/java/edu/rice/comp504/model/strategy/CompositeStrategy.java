@@ -1,6 +1,7 @@
 package edu.rice.comp504.model.strategy;
 
 import edu.rice.comp504.model.paintobj.APaintObject;
+import edu.rice.comp504.model.paintobj.CompositeObject;
 
 /**
  * The CompositeStrategy uses the Composite Design Pattern to update the ball.   As a result, it calls
@@ -36,8 +37,19 @@ public class CompositeStrategy implements IUpdateStrategy {
      * @param context The ball to update
      */
     public void updateState(APaintObject context) {
-        for(IUpdateStrategy strategy : children){
-            strategy.updateState(context);
+        if(context.getType().equals("CompositeObject")){
+            // This is a composite object
+            APaintObject[] arr = ((CompositeObject) context).getChildren();
+            for(APaintObject child : arr){
+                for(IUpdateStrategy strategy : children){
+                    strategy.updateState(child);
+                }
+            }
+        }
+        else{
+            for(IUpdateStrategy strategy : children){
+                strategy.updateState(context);
+            }
         }
     }
 }

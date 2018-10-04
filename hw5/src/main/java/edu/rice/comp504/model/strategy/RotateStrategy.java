@@ -1,15 +1,25 @@
 package edu.rice.comp504.model.strategy;
 
 import edu.rice.comp504.model.paintobj.APaintObject;
+import edu.rice.comp504.model.paintobj.CompositeObject;
 
 import java.awt.*;
 
 public class RotateStrategy implements IUpdateStrategy{
+    private static IUpdateStrategy singleton;
     /**
      * Constructor
      */
     public RotateStrategy() {
 
+    }
+
+    // Create a singleton
+    public static IUpdateStrategy makeStrategy(){
+        if(singleton == null){
+            singleton = new RotateStrategy();
+        }
+        return singleton;
     }
 
     /**
@@ -34,10 +44,22 @@ public class RotateStrategy implements IUpdateStrategy{
      * @param context The ball to update
      */
     public void updateState(APaintObject context) {
-        // Get the velocity from the Ball object
         Point vel = context.getVelocity();
-        context.nextLocation(vel.x, vel.y);
-        // Then call rotate function
-        context.rotate(Math.PI/10);
+        if(context.getType().equals("CompositeObject")){
+            // This is a composite object
+            APaintObject[] arr = ((CompositeObject) context).getChildren();
+            for(APaintObject child : arr){
+                // Override the invalid composite velocity
+                vel = child.getVelocity();
+                child.nextLocation(vel.x, vel.y);
+                // Then call rotate function
+                child.rotate(Math.PI/10);
+            }
+        }
+        else{
+            context.nextLocation(vel.x, vel.y);
+            // Then call rotate function
+            context.rotate(Math.PI/10);
+        }
     }
 }

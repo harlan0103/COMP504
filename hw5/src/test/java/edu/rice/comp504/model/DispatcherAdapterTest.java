@@ -1,6 +1,7 @@
 package edu.rice.comp504.model;
 
 import edu.rice.comp504.model.paintobj.APaintObject;
+import edu.rice.comp504.model.paintobj.CompositeObject;
 import edu.rice.comp504.model.strategy.IUpdateStrategy;
 import edu.rice.comp504.model.strategy.StraightStrategy;
 import junit.framework.TestCase;
@@ -11,112 +12,121 @@ import java.util.Random;
 public class DispatcherAdapterTest extends TestCase {
 
     public void testLoadPaintObj(){
-        /**
-        * Requesting a single shape strategy with the dispatch adapter loadPaintObj method creates
-        * the expected shape strategy
-        * */
-
         DispatcherAdapter dis = new DispatcherAdapter();
+        String[] nullShape = {"Ball", "Rectangle", "Fish", "Triangle", "Rectangle", "Diamond", "Pentagon", "Hexagon", "Octagon"};
         dis.setCanvasDims(new Point(800, 800));
         APaintObject newShape;
-        // ball shape with StraightStrategy
-        newShape = dis.loadPaintObj("StraightStrategy","Ball", "false");
-        assertEquals("straight ball", "StraightStrategy", newShape.getStrategy().getName());
-        assertEquals("straight ball", "Ball", newShape.getType());
-        // rectangle shape with ColorChangeStrategy
-        newShape = dis.loadPaintObj("ColorChangeStrategy", "Rectangle", "false");
-        assertEquals("colorChange rectangle", "ColorChangeStrategy", newShape.getStrategy().getName());
-        assertEquals("colorChange rectangle", "Rectangle", newShape.getType());
+        APaintObject[] arr;
 
-        /**
-        * Requesting multiple strategies with the dispatch adapter loadPaintObj method creates
-        * the expected shape strategy
+        /** #1
+        * Requesting a fish paint object with the dispatch adapter loadPaintObj method creates
+        * the expected image paint object
         * */
+        newShape = dis.loadPaintObj("StraightStrategy", "Fish", "false");
+        assertEquals("Request a fish object", "Fish", newShape.getType());
 
-        newShape = dis.loadPaintObj("StraightStrategy ColorChangeStrategy", "Ball", "false");
-        assertEquals("multiple strategies selected", "composite", newShape.getStrategy().getName());
-
-
-        /**
-        * Requesting an unknown shape strategy creates one shape of each type with NullStrategy
+        /** #2
+        * Requesting multiple paint objects with the dispatch adapter loadPaintObj method creates
+        * the expected composite paint object
         * */
+        newShape = dis.loadPaintObj("StraightStrategy", "Triangle Diamond Rectangle Octagon", "false");
+        assertEquals("chekc type is composite shape", "CompositeObject", newShape.getType());
+        arr = ((CompositeObject) newShape).getChildren();
+        for(int i = 0; i < arr.length; i++){
+            assertEquals("check for each shape strategy", "StraightStrategy", arr[i].getStrategy().getName());
+        }
 
-        // Unknown ball
-        newShape = dis.loadPaintObj("Unknown", "Ball", "false");
-        assertEquals("unknown ball", "Null", newShape.getStrategy().getName());
-        assertEquals("unknown ball", "Ball", newShape.getType());
-        // Unknown rectangle
-        newShape = dis.loadPaintObj("Unknown", "Rectangle", "false");
-        assertEquals("unknown rectangle", "Null", newShape.getStrategy().getName());
-        assertEquals("unknown rectangle", "Rectangle", newShape.getType());
-
-        /**
-        * Requesting a shape with no strategies selected creates one shape of
-        * each type with a NullStrategy
+        /** #3
+        * Requesting an unknown paint object strategy creates a composite
+        * Paint object with one pain object of each type with a NullStrategy
         * */
+        newShape = dis.loadPaintObj("unknown", "unknown", "false");
+        assertEquals("check type is composite shape", "CompositeObject", newShape.getType());
+        arr = ((CompositeObject) newShape).getChildren();
+        for(int i = 0; i < arr.length; i++){
+            assertEquals("check for each type has null strategy", "Null", arr[i].getStrategy().getName());
+            //String[] nullShape = {"Ball", "Rectangle", "Fish", "Triangle", "Rectangle", "Diamond", "Pentagon", "Hexagon", "Octagon"};
+            assertEquals("check for each type name is correct", nullShape[i], arr[i].getType());
+        }
 
-        // No strategy selected ball
-        newShape = dis.loadPaintObj("", "Ball", "false");
-        assertEquals("no strategy selected ball","Null", newShape.getStrategy().getName());
-        assertEquals("no strategy selected ball","Ball", newShape.getType());
-        // No strategy selected rectangle
-        newShape = dis.loadPaintObj("", "Rectangle", "false");
-        assertEquals("no strategy selected rectangle","Null", newShape.getStrategy().getName());
-        assertEquals("no strategy selected rectangle","Rectangle", newShape.getType());
-
-        /**
-        * Requesting a shape with no shape type selected creates one shape of each type with a NullStrategy
+        /** #4
+        * Requesting a paint object with no strategies selected creates a composite paint object
+        * with one paint object of each type with a NullStrategy
         * */
+        newShape = dis.loadPaintObj("", "Triangle", "false");
+        assertEquals("check type is composite shape", "CompositeObject", newShape.getType());
+        arr = ((CompositeObject) newShape).getChildren();
+        for(int i = 0; i < arr.length; i++){
+            assertEquals("check for each type has null strategy", "Null", arr[i].getStrategy().getName());
+            //String[] nullShape = {"Ball", "Rectangle", "Fish", "Triangle", "Rectangle", "Diamond", "Pentagon", "Hexagon", "Octagon"};
+            assertEquals("check for each type name is correct", nullShape[i], arr[i].getType());
+        }
 
-        // No shape selected
+        /** #5
+        * Requesting a paint object with no paint object type selected creates a composite paint object
+        * with one paint object of each type with a NullStrategy
+        * */
         newShape = dis.loadPaintObj("StraightStrategy", "", "false");
-        assertEquals("no shape selected", "Null", newShape.getStrategy().getName());
-
+        assertEquals("check type is composite shape", "CompositeObject", newShape.getType());
+        arr = ((CompositeObject) newShape).getChildren();
+        for(int i = 0; i < arr.length; i++){
+            assertEquals("check for each type has null strategy", "Null", arr[i].getStrategy().getName());
+            //String[] nullShape = {"Ball", "Rectangle", "Fish", "Triangle", "Rectangle", "Diamond", "Pentagon", "Hexagon", "Octagon"};
+            assertEquals("check for each type name is correct", nullShape[i], arr[i].getType());
+        }
     }
 
-    public void testSwitchStrategy(){
+    public void testSwitchStrategy() {
         DispatcherAdapter dis = new DispatcherAdapter();
         dis.setCanvasDims(new Point(800, 800));
-
-        /**
-        * Requesting switcher shapes to switch strategies with no shape types selected
-        * should not cause any switcher shapes to switch strategies
-        * */
-
-        // Switch a strategy to a ball with no shape selected
         APaintObject newShape;
-        newShape = dis.loadPaintObj("StraightStrategy", "Ball", "true");
-        dis.switchStrategy("", "LoopStrategy");
-        assertEquals("no shape selected", "StraightStrategy", newShape.getStrategy().getStrategy().getName());
-
-        /**
-         * Requesting switcher shapes to switch strategies with one shape type selected should only cause
-         * switcher shapes of that type to switch strategies
+        APaintObject[] arr;
+        /** #6
+         * Requesting switcher paint objects to switch strategies with no paint object types selected
+         * Should not cause any switcher paint objects to switch strategies
          * */
+        newShape = dis.loadPaintObj("StraightStrategy", "Triangle Rectangle Hexagon", "true");
+        arr = ((CompositeObject) newShape).getChildren();
+        for (int i = 0; i < arr.length; i++) {
+            // Check shapes are switcher shape
+            assertEquals("check shapes is switcher shape", "SwitcherStrategy", arr[i].getStrategy().getName());
+            assertEquals("check strategy remains same", "StraightStrategy", arr[i].getStrategy().getStrategy().getName());
+        }
+        // With no type selected
+        dis.switchStrategy("ColorChangeStrategy", "");
+        APaintObject[] arrNew = ((CompositeObject) newShape).getChildren();
+        for (int i = 0; i < arr.length; i++) {
+            // Check shapes are switcher shape
+            assertEquals("check strategy remains same", "StraightStrategy", arrNew[i].getStrategy().getStrategy().getName());
+        }
 
-        APaintObject test1, test2, test3;
-        // Create 3 objects, 2 balls and 1 rectangle
-        // balls will change the strategy and rectangle will not
-        test1 = dis.loadPaintObj("StraightStrategy", "Ball", "true");
-        test2 = dis.loadPaintObj("ColorChangeStrategy", "Ball", "true");
-        test3 = dis.loadPaintObj("RotateStrategy", "Rectangle", "true");
-        dis.switchStrategy("SizeChangeStrategy", "Ball");
-        assertEquals("ball change", "SizeChangeStrategy", test1.getStrategy().getStrategy().getName());
-        assertEquals("ball change", "SizeChangeStrategy", test2.getStrategy().getStrategy().getName());
-        assertEquals("rectangle not change", "RotateStrategy", test3.getStrategy().getStrategy().getName());
+        /** #7
+         * Requesting switcher paint objects to switch strategies with one paint object type selected
+         * should only cause switcher paint object of that type to switch strategies when there are no groups
+         * */
+        newShape = dis.loadPaintObj("StraightStrategy", "Triangle", "true");
+        APaintObject test1, test2;
+        test1 = dis.loadPaintObj("ColorChangeStrategy", "Diamond", "true");
+        test2 = dis.loadPaintObj("SizeChangeStrategy", "Ball", "true");
+        // Change the ball strategy
+        dis.switchStrategy("FlickerStrategy", "Ball");
+        assertEquals("check for strategy changes", "StraightStrategy", newShape.getStrategy().getStrategy().getName());
+        assertEquals("check for strategy changes", "ColorChangeStrategy", test1.getStrategy().getStrategy().getName());
+        assertEquals("check for strategy changes", "FlickerStrategy", test2.getStrategy().getStrategy().getName());
 
-        /**
-        * Requesting switcher shapes to switch strategies with all shape types selected
-        * should cause switcher shapes of all types to switch strategies
+        /** #8
+        * Requesting switcher paint object to switch strategies with one paint object type selected should
+        * cause switcher objects of other types to switch strategies when they are in the same group
+        * as the selected paint object type
         * */
-
-        test1 = dis.loadPaintObj("StraightStrategy", "Ball", "true");
-        test2 = dis.loadPaintObj("ColorChangeStrategy", "Ball", "true");
-        test3 = dis.loadPaintObj("RotateStrategy", "Rectangle", "true");
-        dis.switchStrategy("SizeChangeStrategy", "Ball Rectangle");
-        assertEquals("ball change", "SizeChangeStrategy", test1.getStrategy().getStrategy().getName());
-        assertEquals("ball change", "SizeChangeStrategy", test2.getStrategy().getStrategy().getName());
-        assertEquals("rectangle not change", "SizeChangeStrategy", test3.getStrategy().getStrategy().getName());
+        newShape = dis.loadPaintObj("StraightStrategy", "Triangle Hexagon Pentagon Rectangle", "true");
+        // Change to the hexagon
+        dis.switchStrategy("ColorChangeStrategy", "Hexagon");
+        APaintObject[] testArr = ((CompositeObject) newShape).getChildren();
+        String[] name = {"Triangle", "Hexagon", "Pentagon", "Rectangle"};
+        for(int i = 0; i < testArr.length; i++){
+            assertEquals("check for group strategy change", "ColorChangeStrategy", testArr[i].getStrategy().getStrategy().getName());
+            assertEquals("check for shape name", name[i], testArr[i].getType());
+        }
     }
-
 }
