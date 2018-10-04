@@ -39,7 +39,7 @@ function createApp(canvas) {
         }
         else if(shape.type == "Fish"){
             // Draw fish img based on the flip status
-            app.drawFish(shape.loc.x, shape.loc.y, shape.imgWidth, shape.imgHeight, shape.flip);
+            app.drawFish(shape.loc.x, shape.loc.y, shape.imgWidth, shape.imgHeight, shape.flip, shape.angle);
         }
         else if(shape.type == "Diamond"){
             // Draw a diamond shape
@@ -148,16 +148,22 @@ function createApp(canvas) {
     /*
     * To draw a fish img based on the params
     * */
-    var drawFish = function(locX, locY, imgWidth, imgHeight, flip){
+    var drawFish = function(locX, locY, imgWidth, imgHeight, flip, angle){
         var img = new Image();
         if(flip == true){
             img.src = "./fish_flip.png";
-            c.drawImage(img, locX, locY, imgWidth, imgHeight);
         }
         else{
             img.src = "./fish.png";
-            c.drawImage(img, locX, locY, imgWidth, imgHeight);
         }
+        var x = locX + imgWidth / 2;
+        var y = locY + imgHeight / 2;
+        // To rotate the fish
+        c.save();
+        c.translate(x, y);
+        c.rotate(angle);
+        c.drawImage(img, locX - x, locY - y, imgWidth, imgHeight);
+        c.restore();
     }
 
     /*

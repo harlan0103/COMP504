@@ -10,6 +10,7 @@ public class AFish extends APaintObject {
     private int imgWidth;
     private int imgHeight;
     private boolean flip;
+    private int angle;
 
     /**
      * Constructor of ARectangle
@@ -20,6 +21,7 @@ public class AFish extends APaintObject {
         this.imgWidth = imgWidth;
         this.imgHeight = imgHeight;
         this.flip = false;
+        this.angle = 0;
     }
 
     /**
@@ -119,5 +121,12 @@ public class AFish extends APaintObject {
         // Add velocity vectors to the current Location
         this.loc.x += velX;
         this.loc.y += velY;
+    }
+
+    /*
+    * Set angle to change
+    * */
+    public void setAngle(){
+        this.angle += 10;
     }
 }

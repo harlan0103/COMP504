@@ -1,5 +1,6 @@
 package edu.rice.comp504.model.strategy;
 
+import edu.rice.comp504.model.paintobj.AFish;
 import edu.rice.comp504.model.paintobj.APaintObject;
 import edu.rice.comp504.model.paintobj.CompositeObject;
 
@@ -49,17 +50,27 @@ public class RotateStrategy implements IUpdateStrategy{
             // This is a composite object
             APaintObject[] arr = ((CompositeObject) context).getChildren();
             for(APaintObject child : arr){
-                // Override the invalid composite velocity
-                vel = child.getVelocity();
-                child.nextLocation(vel.x, vel.y);
-                // Then call rotate function
-                child.rotate(Math.PI/10);
+                if(child.getType().equals("Fish")){
+                    ((AFish) child).setAngle();
+                }
+                else{
+                    // Override the invalid composite velocity
+                    vel = child.getVelocity();
+                    child.nextLocation(vel.x, vel.y);
+                    // Then call rotate function
+                    child.rotate(Math.PI/10);
+                }
             }
         }
         else{
-            context.nextLocation(vel.x, vel.y);
-            // Then call rotate function
-            context.rotate(Math.PI/10);
+            if(context.getType().equals("Fish")){
+                ((AFish) context).setAngle();
+            }
+            else{
+                context.nextLocation(vel.x, vel.y);
+                // Then call rotate function
+                context.rotate(Math.PI/10);
+            }
         }
     }
 }
