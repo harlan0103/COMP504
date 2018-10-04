@@ -1,0 +1,36 @@
+package edu.rice.comp504.model.cmd;
+
+import edu.rice.comp504.model.paintobj.APaintObject;
+import edu.rice.comp504.model.paintobj.Ball;
+import edu.rice.comp504.model.paintobj.Wall;
+
+import java.awt.*;
+import java.util.LinkedList;
+
+/**
+ * The UpdateStateCmd will possibly update either the paintobj location or attribute (color)
+ */
+public class UpdateStateCmd implements IPaintObjCmd {
+    private Point dims;
+    private LinkedList<Wall> iWalls;
+
+    /**
+     * The constructor
+     * @param dims  The dispatch adapter
+     * @param iWalls The canvas inner walls
+     *
+     */
+    public UpdateStateCmd(Point dims, LinkedList<Wall> iWalls) {
+        this.dims = dims;
+        this.iWalls = iWalls;
+    }
+
+    /**
+     * Update the state of the paintobj
+     * @param context  The paintobj.
+     */
+    public void execute(APaintObject context) {
+        //TODO define collision behavior with inner walls here. This command may possibly override a strategy.
+    }
+
+}
