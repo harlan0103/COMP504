@@ -4,6 +4,7 @@ import edu.rice.comp504.model.cmd.IBallMoveCmd;
 import edu.rice.comp504.model.cmd.SwitchCmd;
 import edu.rice.comp504.model.paint.*;
 import edu.rice.comp504.model.strategy.*;
+import org.eclipse.jetty.websocket.api.SuspendToken;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -21,6 +22,13 @@ public class DispatchAdapter extends Observable {
      */
     public DispatchAdapter() {
 
+    }
+
+    /**
+     * set changes for observers
+     * */
+    public void setChange(){
+        this.setChanged();
     }
 
      /**
@@ -45,7 +53,7 @@ public class DispatchAdapter extends Observable {
     public void updateBallWorld() {
         if(countObservers() != 0){
             setChanged();
-            IBallMoveCmd moveCmd = new IBallMoveCmd(this.dims);
+            IBallMoveCmd moveCmd = new IBallMoveCmd(this.dims, this);
             notifyObservers(moveCmd);
         }
     }
@@ -55,21 +63,24 @@ public class DispatchAdapter extends Observable {
      * @param body  The REST request body has the strategy names.
      * @return A new ball
      */
-    public Ball loadBall(String body, String switcher) {
+    public Ball loadBall(String body, String interactBody, String switcher) {
         Ball newBall;
-        // Get user selected strategy
+        // Get user selected strategy and interact strategy
         IUpdateStrategy strategy = getStrategy(body);
-        System.out.println(strategy.getName());
+        IInteractStrategy interact = getInteractStrategy(interactBody);
+        //System.out.println(strategy.getName());
         // Get canvas dimension
         Point dims = this.getCanvasDims();
 
         // If it is the switcher type ball
         if(switcher.equals("true")){
             IUpdateStrategy switcherStrategy = new SwitcherStrategy(strategy);
-            newBall = Ball.makeBall(switcherStrategy, dims);
+            IInteractStrategy interactStrategy = new SwitcherInteract(interact);
+            newBall = Ball.makeBall(switcherStrategy, interactStrategy, dims);
         }
+
         else{
-            newBall = Ball.makeBall(strategy, dims);
+            newBall = Ball.makeBall(strategy, interact, dims);
         }
         addObserver(newBall);
         return newBall;
@@ -79,16 +90,16 @@ public class DispatchAdapter extends Observable {
      * Switch the strategy for all the switcher balls
      * @param body  The REST request body containing the new strategy.
      */
-    public void switchStrategy(String body) {
-        if(!body.equals("")){
+    public void switchStrategy(String body, String interactBody) {
+        if(!body.equals("") || !interactBody.equals("")){
             // Get the strategy
             IUpdateStrategy strategy = getStrategy(body);
+            IInteractStrategy interact = getInteractStrategy(interactBody);
             setChanged();
-            SwitchCmd switchCmd = new SwitchCmd(strategy);
+            SwitchCmd switchCmd = new SwitchCmd(strategy, interact);
             notifyObservers(switchCmd);
         }
     }
-
 
     /**
      * getStrategy()
@@ -141,6 +152,27 @@ public class DispatchAdapter extends Observable {
                 return SpeedChangeStrategy.makeStrategy();
             default:
                 return new NullStrategy();
+        }
+    }
+
+    public IInteractStrategy getInteractStrategy(String interactName){
+        switch (interactName) {
+            case "EatInteract ":
+                return IeatInteract.makeStrategy();
+            case "DestroyInteract ":
+                return IdestroyInteract.makeStrategy();
+            case "ChangeColorInteract ":
+                return IchangeColorInteract.makeStrategy();
+            case "SwapRadiusInteract ":
+                return IswapRadiusInteract.makeStrategy();
+            case "SwapColorInteract ":
+                return IswapColorInteract.makeStrategy();
+            case "StickInteract ":
+                return IstickInteract.makeStrategy();
+            case "SwapUpdateInteract ":
+                return IswapUpdateInteract.makeStrategy();
+            default:
+                return new Iinteract();
         }
     }
 

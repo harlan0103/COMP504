@@ -62,9 +62,11 @@ window.onload = function() {
 function loadBall() {
     // Get the selected strategy
     var strategy = readStrategy();
+    var interact = readInteract();
     $.post("/load", {
         // post shape and strategy params to the controller
         "strategy": strategy,
+        "interact": interact,
         "switch": "false"
     }, function (data, status) {
         //console.log(data);
@@ -78,9 +80,11 @@ function loadBall() {
 function loadSwitchBall() {
     // Get the selected strategy
     var strategy = readStrategy();
+    var interact = readInteract();
     $.post("/load", {
         // post shape and strategy params to the controller
         "strategy": strategy,
+        "interact": interact,
         "switch": "true"
     }, function (data, status) {
         //console.log(data);
@@ -123,7 +127,7 @@ function canvasDims() {
     });
 }
 
-/*
+/**
 * @readStrategy
 * Read all selected options from multiple select
 * Then create a string containing all selected options
@@ -132,6 +136,27 @@ function canvasDims() {
 function readStrategy(){
     var strategy = "";
     var options = document.getElementById("strategySelector");
+    // For each selected strategy
+    for(var i = 0; i < options.length; i++){
+        // Push every selected option into the array
+        if(options.options[i].selected == true) {
+            // Add to the strategy string
+            strategy += options.options[i].text + " ";
+        }
+    }
+    //console.log(strategy);
+    return strategy;
+}
+
+/**
+ * @readInteract
+ * Read all selected options from multiple select
+ * Then create a string containing all selected interact strategy
+ * Return to loadBall function and transfer options to controller
+ * */
+function readInteract(){
+    var strategy = "";
+    var options = document.getElementById("interactSelector");
     // For each selected strategy
     for(var i = 0; i < options.length; i++){
         // Push every selected option into the array

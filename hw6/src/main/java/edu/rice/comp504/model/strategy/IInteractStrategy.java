@@ -1,5 +1,6 @@
 package edu.rice.comp504.model.strategy;
 
+import edu.rice.comp504.model.DispatchAdapter;
 import edu.rice.comp504.model.paint.Ball;
 
 /**
@@ -18,6 +19,17 @@ public interface IInteractStrategy {
      * @param src  The src ball will impose the interaction strategy on the dest ball.
      * @param dest The dest ball behavior will be affected by the src ball interaction strategy
      */
-    public void interact(Ball src, Ball dest);
+    public void interact(Ball src, Ball dest, DispatchAdapter adapter);
 
+    /**
+     * Set the interact strategy
+     * @param strategy
+     * The strategy to be set
+    */
+    public void setStrategy(IInteractStrategy strategy);
+
+    /**
+     * Return the current interact strategy
+     * */
+    public IInteractStrategy getStrategy();
 }

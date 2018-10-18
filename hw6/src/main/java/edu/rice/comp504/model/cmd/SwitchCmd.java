@@ -1,6 +1,7 @@
 package edu.rice.comp504.model.cmd;
 
 import edu.rice.comp504.model.paint.Ball;
+import edu.rice.comp504.model.strategy.IInteractStrategy;
 import edu.rice.comp504.model.strategy.IUpdateStrategy;
 
 /**
@@ -9,8 +10,10 @@ import edu.rice.comp504.model.strategy.IUpdateStrategy;
  * */
 public class SwitchCmd implements IBallCmd {
     private IUpdateStrategy strategy;
+    private IInteractStrategy istrategy;
 
-    public SwitchCmd(IUpdateStrategy strategy){
+    public SwitchCmd(IUpdateStrategy strategy, IInteractStrategy istrategy){
+        this.istrategy = istrategy;
         this.strategy = strategy;
     }
 
@@ -26,6 +29,11 @@ public class SwitchCmd implements IBallCmd {
         if(context.getUpdateStrategy().getName().equals("SwitcherStrategy")){
             // Check if the current ball is a SwitcherShape
             context.getUpdateStrategy().setStrategy(strategy);
+            //src.getInteractStrategy().interact(src, dest);
+        }
+        if(context.getInteractStrategy().getName().equals("switcherInteract")){
+            // Check if the current ball is a SwitcherInteractStrategy
+            context.getInteractStrategy().setStrategy(istrategy);
         }
     }
 }

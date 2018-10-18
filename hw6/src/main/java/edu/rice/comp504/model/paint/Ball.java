@@ -36,18 +36,19 @@ public class Ball implements Observer {
     /**
      * Constructor without IInteractStrategy
      * */
-    public Ball(Point loc, int radius, Point vel, String color, IUpdateStrategy uStrategy) {
+    public Ball(Point loc, int radius, Point vel, String color, IUpdateStrategy uStrategy, IInteractStrategy iStrategy) {
         this.loc = loc;
         this.radius = radius;
         this.vel = vel;
         this.color = color;
         this.uStrategy = uStrategy;
+        this.iStrategy = iStrategy;
     }
 
     /**
      * Create a new Ball object
      * */
-    public static Ball makeBall(IUpdateStrategy uStrategy, Point dims){
+    public static Ball makeBall(IUpdateStrategy uStrategy, IInteractStrategy iStrategy, Point dims){
         // Get the dimension of canvas
         int dimWidth = dims.x;
         int dimHeight = dims.y;
@@ -66,7 +67,7 @@ public class Ball implements Observer {
         int locY = random.nextInt(dimHeight - 2 * radius) + radius;
         Point loc = new Point(locX, locY);
         // Return a new ball
-        return new Ball(loc, radius, vel, "#97FF7E", uStrategy);
+        return new Ball(loc, radius, vel, "#97FF7E", uStrategy, iStrategy);
     }
 
     /**
@@ -166,7 +167,7 @@ public class Ball implements Observer {
      * @return  The ball-to-ball interaction strategy.
      */
     public IInteractStrategy getInteractStrategy() {
-        return null;
+        return this.iStrategy;
     }
 
     /**
@@ -174,6 +175,7 @@ public class Ball implements Observer {
      * @param iStrategy  The new ball-to-ball interaction strategy
      */
     public void setInteractStrategy(IInteractStrategy iStrategy) {
+        this.iStrategy = iStrategy;
     }
 
     /**
@@ -214,7 +216,23 @@ public class Ball implements Observer {
     /**
      * Detects collision between two balls in the ball world.  Change direction if ball collides with a ball.
      */
-    public boolean ballCollision() {
+    public boolean ballCollision(Ball ball) {
+        // Get radius, velocity and location of this ball
+        int radius = this.getRadius();
+        Point loc = this.getLocation();
+        Point vel = this.getVelocity();
+        // Get radius velocity and location of target ball
+        int bRadius = ball.getRadius();
+        Point bLoc = ball.getLocation();
+        Point bVel = ball.getVelocity();
+
+        // Get the distance between two balls
+        double distance = Math.sqrt(Math.pow((loc.x - bLoc.x), 2) + Math.pow((loc.y - bLoc.y), 2));
+        if(radius + bRadius >= (int)distance){
+            this.setVelocity(new Point(-vel.x, -vel.y));
+            ball.setVelocity(new Point(-bVel.x, -bVel.y));
+            return true;
+        }
         return false;
     }
 

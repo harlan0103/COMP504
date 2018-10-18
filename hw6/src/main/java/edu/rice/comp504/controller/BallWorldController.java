@@ -25,12 +25,12 @@ public class BallWorldController {
         * */
         post("/load", (request, response) -> {
             // Create a new shape with strategy and shape
-            Ball newBall = dis.loadBall(request.queryParams("strategy"), request.queryParams("switch"));
+            Ball newBall = dis.loadBall(request.queryParams("strategy"), request.queryParams("interact"), request.queryParams("switch"));
             return gson.toJson(newBall);
         });
 
         post("/switch", (request, response) -> {
-            dis.switchStrategy(request.queryParams("strategy"));
+            dis.switchStrategy(request.queryParams("strategy"), request.queryParams("interact"));
             return gson.toJson(dis);
         });
 
