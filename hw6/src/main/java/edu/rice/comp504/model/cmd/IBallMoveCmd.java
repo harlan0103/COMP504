@@ -22,6 +22,7 @@ public class IBallMoveCmd implements IBallCmd{
         context.getUpdateStrategy().updateState(context);
 
         adapter.setChange();
+        // Use adapter to notify all observers to detect if balls are having collision with each other
         adapter.notifyObservers(new IBallCmd() {
             @Override
             public void execute(Ball dest) {

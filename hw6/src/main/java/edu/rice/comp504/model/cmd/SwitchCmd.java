@@ -29,7 +29,6 @@ public class SwitchCmd implements IBallCmd {
         if(context.getUpdateStrategy().getName().equals("SwitcherStrategy")){
             // Check if the current ball is a SwitcherShape
             context.getUpdateStrategy().setStrategy(strategy);
-            //src.getInteractStrategy().interact(src, dest);
         }
         if(context.getInteractStrategy().getName().equals("switcherInteract")){
             // Check if the current ball is a SwitcherInteractStrategy

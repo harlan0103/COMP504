@@ -94,8 +94,10 @@ function loadSwitchBall() {
 
 function switchStrategy() {
     var strategy = readStrategy();
+    var interact = readInteract();
     $.post("/switch", {
-        "strategy": strategy
+        "strategy": strategy,
+        "interact": interact
     }, function (data, status) {
         app.updateBallWorld(data);
     }, "json");

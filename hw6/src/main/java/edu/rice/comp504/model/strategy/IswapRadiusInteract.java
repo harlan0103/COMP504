@@ -34,6 +34,7 @@ public class IswapRadiusInteract implements IInteractStrategy{
 
     @Override
     public void interact(Ball src, Ball dest, DispatchAdapter adapter){
+        // Swap the radius of two balls
         int srcRadius = src.getRadius();
         int destRadius = dest.getRadius();
         src.setRadius(destRadius);

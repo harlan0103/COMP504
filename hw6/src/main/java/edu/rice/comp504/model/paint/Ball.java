@@ -229,6 +229,7 @@ public class Ball implements Observer {
         // Get the distance between two balls
         double distance = Math.sqrt(Math.pow((loc.x - bLoc.x), 2) + Math.pow((loc.y - bLoc.y), 2));
         if(radius + bRadius >= (int)distance){
+            // If there is a collision, we change the velocity of both this ball and dest ball
             this.setVelocity(new Point(-vel.x, -vel.y));
             ball.setVelocity(new Point(-bVel.x, -bVel.y));
             return true;

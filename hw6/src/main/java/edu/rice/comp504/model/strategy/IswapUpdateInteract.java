@@ -35,6 +35,7 @@ public class IswapUpdateInteract implements IInteractStrategy{
 
     @Override
     public void interact(Ball src, Ball dest, DispatchAdapter adapter){
+        // Swap update strategy of two balls
         IUpdateStrategy srcStrategy = src.getUpdateStrategy();
         IUpdateStrategy destStrategy = dest.getUpdateStrategy();
         src.setUpdateStrategy(destStrategy);

@@ -34,6 +34,7 @@ public class IswapColorInteract implements IInteractStrategy{
 
     @Override
     public void interact(Ball src, Ball dest, DispatchAdapter adapter){
+        // Swap color of two balls
         String srcColor = src.getColor();
         String destColor = dest.getColor();
         src.setColor(destColor);
