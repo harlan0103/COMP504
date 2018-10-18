@@ -123,7 +123,7 @@ function canvasDims() {
     });
 }
 
-/*
+/**
 * @readStrategy
 * Read all selected options from multiple select
 * Then create a string containing all selected options

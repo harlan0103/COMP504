@@ -33,6 +33,9 @@ public class Ball implements Observer {
     }
     */
 
+    /**
+     * Constructor without IInteractStrategy
+     * */
     public Ball(Point loc, int radius, Point vel, String color, IUpdateStrategy uStrategy) {
         this.loc = loc;
         this.radius = radius;

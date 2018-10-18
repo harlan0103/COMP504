@@ -53,6 +53,10 @@ public class LoopStrategy implements IUpdateStrategy {
         context.nextLocation(vel.x, vel.y);
     }
 
+    /**
+     * Check if ball is collide
+     * If collide then set location to the top of the canvas
+     * */
     public void checkLoop(Ball context){
         //Get the collide status
         boolean collideStatus = context.getCollision();

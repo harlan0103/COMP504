@@ -52,7 +52,7 @@ public class BallWorldController {
             int width = Integer.parseInt(request.queryParams("width"));
             int height = Integer.parseInt(request.queryParams("height"));
             // Clear out when refresh the page
-            //dis.clear();
+            dis.clear();
             Point dim = new Point(width, height);
             // Set the dimension info to the adapter
             dis.setCanvasDims(dim);
