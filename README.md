@@ -1,6 +1,6 @@
 # COMP504
-Fall 2018 @ Rice University<br/>
-GRADUATE OBJECT-ORIENTED PROGRAMMING AND DESIGN<br/>
+<b>GRADUATE OBJECT-ORIENTED PROGRAMMING AND DESIGN</b><br/>
+<b>Fall 2018 @ Rice University</b><br/>
 https://www.clear.rice.edu/comp504/#/assignments
 
 ## HW1
